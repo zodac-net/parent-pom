@@ -1,0 +1,146 @@
+name: Publish
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "pom.xml"
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    env:
+      has_changes: "false"
+      changelog_content: ""
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Needed for pushing tags
+
+      - name: Fetch tags
+        run: git fetch --tags
+
+      - name: Configure git user
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Read current version
+        id: version
+        run: |
+          version=$(cat VERSION)
+          echo "Using version: ${version}"
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      # Set up Java & Maven to execute tests
+      - name: Cache local .m2
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Setup Maven Action
+        uses: s4u/setup-maven-action@v1.18.0
+        with:
+          checkout-fetch-depth: 0
+          java-distribution: "temurin"
+          java-version: "25"
+          maven-version: "3.9.11"
+
+      - name: Run Java lints and tests with Maven (including SonarQube)
+        env:
+          SONARQUBE_HOST_URL: ${{ secrets.SONARQUBE_HOST_URL }}
+          SONARQUBE_PAT: ${{ secrets.SONARQUBE_RW_PAT }}
+        run: mvn clean install -Dall -Dsonarqube
+
+      - name: Set Maven version from VERSION file
+        run: |
+          mvn versions:set -DnewVersion=${{ steps.version.outputs.version }} -DgenerateBackupPoms=false -DprocessAllModules
+
+      - name: Set up Ruff cache
+        uses: actions/cache@v4
+        with:
+          path: .ruff_cache
+          key: ruff-${{ runner.os }}-${{ hashFiles('**/*.py', 'ci/python/ruff.toml') }}
+          restore-keys: |
+            ruff-${{ runner.os }}-
+
+      - name: Run Python lints and tests with Ruff
+        run: bash .github/scripts/python_lint_and_tests.sh
+
+      # Output is not used in Docker image, this step is only used to smoke-test the version update
+      - name: Build source with updated versions
+        run: mvn clean install
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        id: docker_build
+        uses: docker/build-push-action@v5
+        with:
+          cache-from: type=registry,ref=zodac/tracker-profiles:cache
+          cache-to: type=registry,ref=zodac/tracker-profiles:cache,mode=max
+          context: .
+          file: ./docker/Dockerfile
+          push: true
+          tags: |
+            zodac/tracker-profiles:${{ steps.version.outputs.version }}
+            zodac/tracker-profiles:latest
+
+      - name: Get previous tag
+        id: prev_tag
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^)
+          echo "prev_tag=${PREV_TAG}" >> "${GITHUB_OUTPUT}"
+
+      - name: Generate categorized changelog
+        id: changelog
+        run: .github/scripts/generate_changelog.sh "${{ steps.prev_tag.outputs.prev_tag }}"
+
+      - name: Bump patch version in VERSION file
+        run: .github/scripts/bump_version.sh "${{ steps.version.outputs.version }}"
+
+      - name: Tag current version in git (only if Docker build succeeds)
+        if: env.has_changes == 'true'
+        run: git tag ${{ steps.version.outputs.version }}
+
+      - name: Push commit and tag if there were changes
+        if: env.has_changes == 'true'
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: master
+          tags: "true"
+
+      - name: Create GitHub Release
+        if: env.has_changes == 'true'
+        uses: ncipollo/release-action@v1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: v${{ steps.version.outputs.version }}
+          tag: ${{ steps.version.outputs.version }}
+          body: |
+            ## Changes since ${{ steps.prev_tag.outputs.prev_tag }}:
+
+            ${{ env.changelog_content }}
+
+      - name: Summary
+        if: env.has_changes == 'true'
+        run: |
+          echo "GitHub release created for version: ${{ steps.version.outputs.version }}"

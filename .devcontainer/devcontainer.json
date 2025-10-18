@@ -1,0 +1,89 @@
+{
+    "name": "[parent-pom] Dev Container",
+    "build": {
+        "context": "..",
+        "dockerfile": "Dockerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "editor.formatOnSave": false, // Only format files with formatters explicitly configured below
+                "editor.insertSpaces": true,
+                "editor.tabSize": 4,
+                "remote.autoForwardPorts": false,
+                "remote.ignoreLocalPorts": [],
+                "workbench.editor.enablePreview": false,
+                "[dockerfile]": {
+                    "editor.defaultFormatter": "ms-azuretools.vscode-containers",
+                    "editor.formatOnSave": true
+                },
+                "[github-actions-workflow]": {
+                    "editor.defaultFormatter": "redhat.vscode-yaml",
+                    "editor.formatOnSave": true,
+                    "editor.tabSize": 2,
+                    "yaml.format.printWidth": 150
+                },
+                "[json]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true,
+                    "prettier.printWidth": 150,
+                    "prettier.tabWidth": 4
+                },
+                "[jsonc]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true,
+                    "prettier.printWidth": 150,
+                    "prettier.tabWidth": 4
+                },
+                "[markdown]": {
+                    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+                    "editor.formatOnSave": true,
+                    "markdownlint.configFile": "code-quality-config/markdown/.markdownlint.json"
+                },
+                "[shellscript]": {
+                    "editor.defaultFormatter": "mkhl.shfmt",
+                    "editor.formatOnSave": true
+                },
+                "[xml]": {
+                    "editor.defaultFormatter": "DotJoshJohnson.xml",
+                    "editor.formatOnSave": true,
+                    "yaml.format.printWidth": 150
+                },
+                "[yaml]": {
+                    "editor.defaultFormatter": "redhat.vscode-yaml",
+                    "editor.formatOnSave": true,
+                    "editor.tabSize": 2,
+                    "yaml.format.printWidth": 150,
+                    "yaml.validate": false
+                }
+            },
+            "extensions": [
+                "davidanson.vscode-markdownlint",
+                "dotjoshjohnson.xml",
+                "esbenp.prettier-vscode",
+                "github.vscode-github-actions",
+                "mkhl.shfmt",
+                "ms-azuretools.vscode-docker",
+                "redhat.vscode-yaml",
+                "tamasfe.even-better-toml",
+                "timonwong.shellcheck",
+                "vscjava.vscode-java-pack"
+            ],
+            "files.associations": {
+                "LICENSE": "plaintext",
+                "VERSION": "plaintext"
+            }
+        }
+    },
+    "forwardPorts": [],
+    "mounts": [
+        "source=${localWorkspaceFolder},target=/workspace,type=bind",
+        "source=${localEnv:USERPROFILE}/.gitconfig,target=/root/.gitconfig,type=bind,consistency=cached",
+        "source=${localEnv:USERPROFILE}/.m2,target=/root/.m2,type=bind",
+        "source=${localEnv:USERPROFILE}/.ssh,target=/root/.ssh,type=bind,consistency=cached"
+    ],
+    "postCreateCommand": "chmod 700 /root/.ssh && chmod 600 /root/.ssh/*",
+    "remoteUser": "root",
+    "userEnvProbe": "loginInteractiveShell",
+    "workspaceFolder": "/workspace"
+}

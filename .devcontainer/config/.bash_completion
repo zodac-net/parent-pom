@@ -1,0 +1,49 @@
+COMP_WORDBREAKS=${COMP_WORDBREAKS//:/} # Autocompletion of strings with a : (like maven goals) will not work without this
+
+_mvn() {
+    local cur
+    local prev
+
+    COMPREPLY=()
+    cur=${COMP_WORDS[COMP_CWORD]}
+    prev=${COMP_WORDS[COMP_CWORD - 1]}
+
+    if [ "${COMP_CWORD}" -eq 1 ]; then
+        mapfile -t COMPREPLY < <(compgen -W "\
+            checkstyle:check \
+            clean \
+            dependency:analyze-only \
+            dependency:purge-local-repository \
+            dependency:resolve \
+            dependency:tree \
+            deploy \
+            install \
+            license:format \
+            package \
+            spring-boot:run \
+            test \
+            validate \
+            verify \
+            versions:update-properties
+        " -- "${cur}")
+    elif [ "${COMP_CWORD}" -gt 1 ]; then
+        case "$prev" in
+        "clean")
+            mapfile -t COMPREPLY < <(compgen -W "install package test validate verify" -- "${cur}")
+            ;;
+        "dependency:analyze")
+            mapfile -t COMPREPLY < <(compgen -W "-DignoreNonCompile=true" -- "${cur}")
+            ;;
+        "package")
+            mapfile -t COMPREPLY < <(compgen -W "-Dminify -Draml" -- "${cur}")
+            ;;
+        "install")
+            mapfile -t COMPREPLY < <(compgen -W "-Dall -Dlint -Dtests" -- "${cur}")
+            ;;
+        *) ;;
+        esac
+    fi
+
+    return 0
+}
+complete -F _mvn "mvn"

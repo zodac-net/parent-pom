@@ -1,0 +1,29 @@
+name: Documentation
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - ".github/workflows/documentation.yml"
+      - "README.md"
+
+jobs:
+  analyze:
+    name: Documentation Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: DavidAnson/markdownlint-cli2-action@v19.1.0
+        with:
+          config: "code-quality-config/markdown/.markdownlint.json"
+          globs: "README.md"
+          separator: ","

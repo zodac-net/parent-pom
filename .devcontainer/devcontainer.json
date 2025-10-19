@@ -10,6 +10,7 @@
                 "editor.formatOnSave": false, // Only format files with formatters explicitly configured below
                 "editor.insertSpaces": true,
                 "editor.tabSize": 4,
+                "files.insertFinalNewline": true,
                 "remote.autoForwardPorts": false,
                 "remote.ignoreLocalPorts": [],
                 "workbench.editor.enablePreview": false,
@@ -45,9 +46,16 @@
                     "editor.formatOnSave": true
                 },
                 "[xml]": {
-                    "editor.defaultFormatter": "DotJoshJohnson.xml",
+                    "editor.defaultFormatter": "redhat.vscode-xml",
                     "editor.formatOnSave": true,
-                    "yaml.format.printWidth": 150
+                    "xml.format.closingBracketNewLine": false,
+                    "xml.format.enforceQuoteStyle": "preferred",
+                    "xml.format.maxLineWidth": 150,
+                    "xml.format.spaceBeforeEmptyCloseTag": true,
+                    "xml.format.splitAttributes": "alignWithFirstAttr",
+                    "xml.format.splitAttributesIndentSize": 4,
+                    "xml.format.xsiSchemaLocationSplit": "onPair",
+                    "xml.preferences.quoteStyle": "double"
                 },
                 "[yaml]": {
                     "editor.defaultFormatter": "redhat.vscode-yaml",
@@ -59,12 +67,12 @@
             },
             "extensions": [
                 "davidanson.vscode-markdownlint",
-                "dotjoshjohnson.xml",
                 "esbenp.prettier-vscode",
                 "github.vscode-github-actions",
                 "mkhl.shfmt",
                 "ms-azuretools.vscode-docker",
                 "redhat.vscode-yaml",
+                "redhat.vscode-xml",
                 "tamasfe.even-better-toml",
                 "timonwong.shellcheck",
                 "vscjava.vscode-java-pack"

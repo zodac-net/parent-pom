@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.zodac</groupId>
@@ -82,7 +83,6 @@
         <spotbugs-maven-plugin.version>4.9.6.0</spotbugs-maven-plugin.version>
 
         <!-- Linter Properties -->
-        <!--suppress UnresolvedMavenProperty, files are only used in child modules -->
         <ci-config-directory>${project.parent.basedir}/code-quality-config/java</ci-config-directory>
         <checkstyle-file>${ci-config-directory}/checkstyle.xml</checkstyle-file>
         <license-file>${project.parent.basedir}/code-quality-config/licenses/bsd0.txt</license-file>
@@ -90,7 +90,6 @@
         <pitest-test-strength-threshold>100</pitest-test-strength-threshold>
         <pmd-ruleset>${ci-config-directory}/pmd-ruleset.xml</pmd-ruleset>
         <sonar.exclusions>**/gen/**/*,src/test/**/*</sonar.exclusions>
-        <!--suppress UnresolvedMavenProperty, injected by environment variable -->
         <sonar.host.url>${env.SONARQUBE_HOST_URL}</sonar.host.url>
         <sonar.java.checkstyle.reportPaths>${project.build.directory}/checkstyle-result.xml</sonar.java.checkstyle.reportPaths>
         <sonar.java.pmd.reportPaths>${project.build.directory}/pmd.xml</sonar.java.pmd.reportPaths>
@@ -98,7 +97,6 @@
         <sonar.language>java</sonar.language>
         <sonar.projectKey>${project.artifactId}</sonar.projectKey>
         <sonar.projectName>${project.artifactId}</sonar.projectName>
-        <!--suppress UnresolvedMavenProperty, injected by environment variable -->
         <sonar.token>${env.SONARQUBE_PAT}</sonar.token>
         <spotbugs-exclude-file>${ci-config-directory}/spotbugs-exclude-filter-file.xml</spotbugs-exclude-file>
         <spotbugs-include-file>${ci-config-directory}/spotbugs-include-filter-file.xml</spotbugs-include-file>
@@ -325,7 +323,7 @@
                     <configuration>
                         <!-- List of dependencies to not be updated, due to incompatible versions -->
                         <!-- If a valid update becomes available, it can be updated and removed from below -->
-                        <excludes/>
+                        <excludes />
                         <generateBackupPoms>false</generateBackupPoms>
                         <ruleSet>
                             <ignoreVersions>
@@ -429,7 +427,6 @@
                         </mapping>
                         <properties>
                             <initial-year>${initial-year}</initial-year>
-                            <!--suppress UnresolvedMavenProperty, defined by build-helper-maven-plugin -->
                             <year>${current-year}</year>
                             <website>zodac.net</website>
                         </properties>
@@ -461,7 +458,6 @@
                     <configuration>
                         <configLocation>${checkstyle-file}</configLocation>
                         <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                        <!--suppress UnresolvedMavenProperty, file is only used in child modules -->
                         <propertyExpansion>checkstyle.config.path=${ci-config-directory}</propertyExpansion>
                         <skip>${skip-linters}</skip>
                         <violationSeverity>info</violationSeverity>
@@ -534,7 +530,7 @@
                     <configuration>
                         <rules>
                             <banDynamicVersions>
-                                <excludedScopes/>
+                                <excludedScopes />
                                 <ignores>
                                     <!-- Format: <ignore>groupId[:artifactId[:version[:type[:scope:[classifier]]]]]</ignore> -->
                                     <!-- Exclude our own JARs -->
@@ -548,7 +544,7 @@
                                     <exclude>junit:junit-dep</exclude>
                                 </excludes>
                             </bannedDependencies>
-                            <dependencyConvergence/>
+                            <dependencyConvergence />
                             <requireJavaVersion>
                                 <version>[${java-release},)</version>
                             </requireJavaVersion>
@@ -577,7 +573,7 @@
                     <configuration>
                         <!-- Excluding 'missing' due to 'use of default constructor, which does not provide a comment' false positive -->
                         <doclint>all,-missing</doclint>
-                        <excludePackageNames/>
+                        <excludePackageNames />
                         <!-- Would prefer this to be true, but annoying false positive with default constructors -->
                         <failOnWarnings>false</failOnWarnings>
                         <quiet>true</quiet>
@@ -658,7 +654,7 @@
                     <artifactId>pitest-maven</artifactId>
                     <version>${pitest-maven.version}</version>
                     <configuration>
-                        <excludedTestClasses/>
+                        <excludedTestClasses />
                         <failWhenNoMutations>false</failWhenNoMutations>
                         <outputFormats>html</outputFormats>
                         <skip>${skip-linters}</skip>

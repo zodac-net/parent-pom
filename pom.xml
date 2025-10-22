@@ -9,6 +9,37 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>[${project.artifactId}] Project</name>
+    <url>https://github.com/zodac-net/parent-pom</url>
+
+    <developers>
+        <developer>
+            <id>zodac</id>
+            <name>zodac</name>
+            <email>arouge110@msn.com</email>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>BSD Zero Clause License</name>
+            <url>https://opensource.org/licenses/0BSD</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git://github.com/zodac-net/parent-pom.git</connection>
+        <developerConnection>scm:git:ssh://github.com/zodac-net/parent-pom.git</developerConnection>
+        <url>https://github.com/zodac-net/parent-pom</url>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>ossrh</id>
+            <name>Central Repository OSSRH</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <properties>
         <!-- Project Properties -->
@@ -58,6 +89,7 @@
         <maven-project-info-reports-plugin.version>3.9.0</maven-project-info-reports-plugin.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
         <versions-maven-plugin.version>2.19.1</versions-maven-plugin.version>
 
@@ -380,6 +412,19 @@
                             <id>default-check</id>
                             <goals>
                                 <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar-no-fork</goal>
                             </goals>
                         </execution>
                     </executions>

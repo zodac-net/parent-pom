@@ -65,6 +65,13 @@ jobs:
           SONARQUBE_PAT: ${{ secrets.SONARQUBE_RW_PAT }}
         run: mvn clean install -Dall -Dsonarqube
 
+      - name: Import GPG keys
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+          echo "${{ secrets.GPG_PUBLIC_KEY }}" | gpg --batch --import
+          gpg --list-secret-keys
+          gpg --list-keys
+
       - name: Configure Maven settings.xml
         run: |
           mkdir -p ~/.m2

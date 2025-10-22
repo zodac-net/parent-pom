@@ -56,24 +56,35 @@ jobs:
           java-version: "25"
           maven-version: "3.9.11"
 
+      - name: Release version
+        run: mvn versions:set -DremoveSnapshot
+
       - name: Run Java lints and tests with Maven (including SonarQube)
         env:
           SONARQUBE_HOST_URL: ${{ secrets.SONARQUBE_HOST_URL }}
           SONARQUBE_PAT: ${{ secrets.SONARQUBE_RW_PAT }}
         run: mvn clean install -Dall -Dsonarqube
 
-      - name: Release version
-        run: mvn versions:set -DremoveSnapshot
-
-      # This step is only used to smoke-test the version update
-      - name: Build source with updated versions
-        run: mvn clean install
-
-      - name: Publish package
-        run: mvn --batch-mode deploy
+      - name: Configure Maven settings.xml
+        run: |
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml <<EOF
+          <settings>
+            <servers>
+              <server>
+                <id>central</id>
+                <username>${MAVEN_USERNAME}</username>
+                <password>${MAVEN_PASSWORD}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+
+      - name: Publish package
+        run: mvn deploy
 
       - name: Get previous tag
         id: prev_tag

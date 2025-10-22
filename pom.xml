@@ -6,9 +6,10 @@
 
     <groupId>net.zodac</groupId>
     <artifactId>parent-pom</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <version>0.0.1</version>
+    <description>Parent POM containing shared configuration and plugin management for zodac.net projects</description>
     <name>[${project.artifactId}] Project</name>
+    <packaging>pom</packaging>
     <url>https://github.com/zodac-net/parent-pom</url>
 
     <developers>
@@ -32,14 +33,6 @@
         <developerConnection>scm:git:ssh://github.com/zodac-net/parent-pom.git</developerConnection>
         <url>https://github.com/zodac-net/parent-pom</url>
     </scm>
-
-    <distributionManagement>
-        <repository>
-            <id>ossrh</id>
-            <name>Central Repository OSSRH</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
 
     <properties>
         <!-- Project Properties -->
@@ -77,6 +70,7 @@
 
         <!-- Plugin Versions -->
         <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
+        <central-publishing-maven-plugin.version>0.9.0</central-publishing-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
         <jmeter-maven-plugin.version>3.8.0</jmeter-maven-plugin.version>
         <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
@@ -226,6 +220,17 @@
                             </configuration>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>${central-publishing-maven-plugin.version}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <autoPublish>true</autoPublish>
+                        <publishingServerId>central</publishingServerId>
+                        <signFiles>true</signFiles>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>com.lazerycode.jmeter</groupId>
@@ -778,6 +783,11 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <extensions>true</extensions>
             </plugin>
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>

@@ -58,6 +58,9 @@
         <line-coverage>0.0</line-coverage>
         <branch-coverage>0.0</branch-coverage>
 
+        <!-- Deploy Properties -->
+        <skip-gpg-signing>true</skip-gpg-signing>
+
         <!-- 3PP Versions -->
         <gson.version>2.13.2</gson.version>
         <log4j.version>2.25.2</log4j.version>
@@ -334,6 +337,7 @@
                     <configuration>
                         <keyname>${env.GPG_KEY_ID}</keyname>
                         <passphrase />
+                        <skip>${skip-gpg-signing}</skip>
                     </configuration>
                     <executions>
                         <execution>
@@ -865,6 +869,19 @@
                 <skip-integration-tests>false</skip-integration-tests>
                 <skip-tests>false</skip-tests>
                 <skip-ui-tests>false</skip-ui-tests>
+            </properties>
+        </profile>
+
+        <!-- Profile used to deploy to Maven Central -->
+        <profile>
+            <id>maven_publish</id>
+            <activation>
+                <property>
+                    <name>publish</name>
+                </property>
+            </activation>
+            <properties>
+                <skip-gpg-signing>false</skip-gpg-signing>
             </properties>
         </profile>
 

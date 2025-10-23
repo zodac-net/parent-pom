@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
     <name>[${project.artifactId}] Project</name>
     <description>Parent POM containing shared configuration and plugin management for zodac.net projects</description>
-    <url>https://github.com/zodac-net/parent-pom</url>
+    <url>https://github.com/zodac/parent-pom</url>
 
     <licenses>
         <license>
@@ -29,9 +29,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/zodac-net/parent-pom.git</connection>
-        <developerConnection>scm:git:ssh://github.com/zodac-net/parent-pom.git</developerConnection>
-        <url>https://github.com/zodac-net/parent-pom</url>
+        <connection>scm:git:git://github.com/zodac/parent-pom.git</connection>
+        <developerConnection>scm:git:ssh://github.com/zodac/parent-pom.git</developerConnection>
+        <url>https://github.com/zodac/parent-pom</url>
     </scm>
 
     <properties>

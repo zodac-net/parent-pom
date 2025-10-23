@@ -75,7 +75,7 @@ jobs:
           echo "${{ secrets.GPG_PUBLIC_KEY }}" | gpg --batch --import
 
           # Mark all keys as trusted
-          echo -e "trust\n5\ny\nquit" | gpg --command-fd 0 --edit-key $(gpg --list-keys --with-colons | awk -F: '/^pub/ {print $5}')
+          gpg --list-keys --with-colons | awk -F: '/^fpr:/ {print $10 ":6:"}' | gpg --import-ownertrust
 
           gpg --list-secret-keys
           gpg --list-keys

@@ -10,6 +10,7 @@
                 "editor.formatOnSave": false, // Only format files with formatters explicitly configured below
                 "editor.insertSpaces": true,
                 "editor.tabSize": 4,
+                "files.autoSave": "onFocusChange",
                 "files.insertFinalNewline": true,
                 "remote.autoForwardPorts": false,
                 "remote.ignoreLocalPorts": [],

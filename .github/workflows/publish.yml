@@ -109,8 +109,17 @@ jobs:
       - name: Get previous tag
         id: prev_tag
         run: |
-          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^)
-          echo "prev_tag=${PREV_TAG}" >> "${GITHUB_OUTPUT}"
+          set +e
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null)
+          EXIT_CODE=$?
+          set -e
+
+          if [ $EXIT_CODE -ne 0 ] || [ -z "${PREV_TAG}" ]; then
+            echo "No previous tag found, using empty string"
+            PREV_TAG=""
+          fi
+
+          echo "prev_tag=${PREV_TAG}" >> $GITHUB_OUTPUT
 
       - name: Generate categorized changelog
         id: changelog

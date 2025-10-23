@@ -5,6 +5,7 @@ on:
     branches: [master]
     paths:
       - "pom.xml"
+      - "VERSION"
 
 permissions:
   contents: write

@@ -61,7 +61,7 @@ jobs:
           maven-version: "3.9.11"
 
       - name: Release version
-        run: mvn versions:set -DremoveSnapshot
+        run: mvn versions:set -DnewVersion=${{ steps.version.outputs.version }}
 
       - name: Run Java lints and tests with Maven (including SonarQube)
         env:

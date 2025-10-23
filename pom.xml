@@ -58,7 +58,7 @@
         <line-coverage>0.0</line-coverage>
         <branch-coverage>0.0</branch-coverage>
 
-        <!-- Deploy Properties -->
+        <!-- Publish Properties -->
         <skip-gpg-signing>true</skip-gpg-signing>
 
         <!-- 3PP Versions -->

@@ -1,0 +1,89 @@
+name: Monthly Dependency and Submodule Update
+
+on:
+  schedule:
+    # Runs on the 1st of every month at 03:00 UTC
+    - cron: "0 3 1 * *"
+  workflow_dispatch: # allows manual trigger
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    env:
+      has_changes: "false"
+
+    steps:
+      - name: Checkout repository (with submodules)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Needed for pushing tags
+          submodules: true
+
+      - name: Fetch tags
+        run: git fetch --tags
+
+      - name: Configure git user
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      # Set up Java & Maven to execute tests
+      - name: Cache local .m2
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Setup Maven Action
+        uses: s4u/setup-maven-action@v1.18.0
+        with:
+          checkout-fetch-depth: 0
+          java-distribution: "temurin"
+          java-version: "25"
+          maven-version: "3.9.11"
+
+      - name: Update Maven dependency versions
+        run: mvn versions:update-properties
+
+      - name: Check for latest tag in submodule
+        id: update_submodule
+        run: |
+          cd code-quality-config
+          git fetch --tags
+
+          latest_tag=$(git describe --tags "$(git rev-list --tags --max-count=1)")
+          current_tag=$(git describe --tags --exact-match 2>/dev/null || echo "none")
+
+          echo "Latest tag: $latest_tag"
+          echo "Current tag: $current_tag"
+
+          if [ "$latest_tag" != "$current_tag" ]; then
+            echo "Updating submodule to $latest_tag"
+            git checkout "$latest_tag"
+            cd ..
+            git add code-quality-config
+          fi
+
+      - name: Run Java lints and tests with Maven
+        run: mvn clean install -Dall
+
+      - name: Check for changes
+        id: detect_changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "has_changes=true" >> $GITHUB_ENV
+          fi
+
+      - name: Commit changes
+        id: change_commit
+        if: env.has_changes == 'true'
+        run: git commit -m '[CI] Updating versions'
+
+      - name: Push changes
+        if: env.has_changes == 'true'
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          branch: master
+          github_token: ${{ secrets.GITHUB_TOKEN }}

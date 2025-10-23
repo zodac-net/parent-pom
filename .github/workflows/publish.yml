@@ -67,6 +67,8 @@ jobs:
         run: mvn clean install -Dall -Dsonarqube
 
       - name: Import GPG keys
+        env:
+          GNUPGHOME: ~/.gnupg
         run: |
           mkdir -p ~/.gnupg
           chmod 700 ~/.gnupg    
@@ -79,10 +81,11 @@ jobs:
 
           gpg --list-secret-keys
           gpg --list-keys
-        env:
-          GNUPGHOME: ~/.gnupg
 
       - name: Configure Maven settings.xml
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
         run: |
           mkdir -p ~/.m2
           cat > ~/.m2/settings.xml <<EOF
@@ -96,15 +99,12 @@ jobs:
             </servers>
           </settings>
           EOF
-        env:
-          MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
 
       - name: Publish package
-        run: mvn deploy -Dpublish
         env:
           GNUPGHOME: ~/.gnupg
           GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+        run: mvn deploy -Dpublish
 
       - name: Get previous tag
         id: prev_tag
@@ -136,8 +136,8 @@ jobs:
         if: env.has_changes == 'true'
         uses: ad-m/github-push-action@v0.8.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: master
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           tags: "true"
 
       - name: Create GitHub Release

@@ -68,8 +68,7 @@ jobs:
       - name: Import GPG keys
         run: |
           mkdir -p ~/.gnupg
-          chmod 700 ~/.gnupg
-          export GNUPGHOME=$(mktemp -d)
+          chmod 700 ~/.gnupg    
 
           echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
           echo "${{ secrets.GPG_PUBLIC_KEY }}" | gpg --batch --import
@@ -79,6 +78,8 @@ jobs:
 
           gpg --list-secret-keys
           gpg --list-keys
+        env:
+          GNUPGHOME: ~/.gnupg
 
       - name: Configure Maven settings.xml
         run: |
@@ -101,6 +102,7 @@ jobs:
       - name: Publish package
         run: mvn deploy -Dpublish
         env:
+          GNUPGHOME: ~/.gnupg
           GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
 
       - name: Get previous tag

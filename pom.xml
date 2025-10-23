@@ -872,7 +872,7 @@
             </properties>
         </profile>
 
-        <!-- Profile used to deploy to Maven Central -->
+        <!-- Profile used to publish the artifact to Maven Central -->
         <profile>
             <id>maven_publish</id>
             <activation>

@@ -67,7 +67,6 @@ jobs:
             echo "Updating submodule to $latest_tag"
             git checkout "$latest_tag"
             cd ..
-            git add code-quality-config
           fi
 
       - name: Run Java lints and tests with Maven
@@ -77,6 +76,7 @@ jobs:
         id: detect_changes
         run: |
           if [ -n "$(git status --porcelain)" ]; then
+            git add -A
             echo "has_changes=true" >> $GITHUB_ENV
           fi
 

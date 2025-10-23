@@ -90,4 +90,4 @@ jobs:
         uses: ad-m/github-push-action@v0.8.0
         with:
           branch: master
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GH_RW_PAT }} # Using GH_RW_PAT so other workflows will trigger

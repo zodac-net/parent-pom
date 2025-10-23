@@ -67,8 +67,16 @@ jobs:
 
       - name: Import GPG keys
         run: |
+          mkdir -p ~/.gnupg
+          chmod 700 ~/.gnupg
+          export GNUPGHOME=$(mktemp -d)
+
           echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
           echo "${{ secrets.GPG_PUBLIC_KEY }}" | gpg --batch --import
+
+          # Mark all keys as trusted
+          echo -e "trust\n5\ny\nquit" | gpg --command-fd 0 --edit-key $(gpg --list-keys --with-colons | awk -F: '/^pub/ {print $5}')
+
           gpg --list-secret-keys
           gpg --list-keys
 
@@ -92,6 +100,8 @@ jobs:
 
       - name: Publish package
         run: mvn deploy
+        env:
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
 
       - name: Get previous tag
         id: prev_tag

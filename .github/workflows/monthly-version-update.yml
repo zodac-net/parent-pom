@@ -87,7 +87,9 @@ jobs:
 
       - name: Push changes
         if: env.has_changes == 'true'
-        uses: ad-m/github-push-action@v0.8.0
-        with:
-          branch: master
-          github_token: ${{ secrets.GH_RW_PAT }} # Using GH_RW_PAT so other workflows will trigger
+        env:
+          # Using GH_RW_PAT so other workflows will trigger
+          GH_RW_PAT: ${{ secrets.GH_RW_PAT }}
+        run: |
+          git remote set-url origin https://x-access-token:${GH_RW_PAT}@github.com/${GITHUB_REPOSITORY}.git
+          git push origin master

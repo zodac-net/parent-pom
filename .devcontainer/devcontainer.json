@@ -64,6 +64,10 @@
                     "editor.tabSize": 2,
                     "yaml.format.printWidth": 150,
                     "yaml.validate": false
+                },
+                "files.associations": {
+                    "LICENSE": "plaintext",
+                    "VERSION": "plaintext"
                 }
             },
             "extensions": [
@@ -77,11 +81,7 @@
                 "tamasfe.even-better-toml",
                 "timonwong.shellcheck",
                 "vscjava.vscode-java-pack"
-            ],
-            "files.associations": {
-                "LICENSE": "plaintext",
-                "VERSION": "plaintext"
-            }
+            ]
         }
     },
     "forwardPorts": [],

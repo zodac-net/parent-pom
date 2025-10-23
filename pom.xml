@@ -7,18 +7,10 @@
     <groupId>net.zodac</groupId>
     <artifactId>parent-pom</artifactId>
     <version>0.0.6-SNAPSHOT</version>
-    <description>Parent POM containing shared configuration and plugin management for zodac.net projects</description>
-    <name>[${project.artifactId}] Project</name>
     <packaging>pom</packaging>
+    <name>[${project.artifactId}] Project</name>
+    <description>Parent POM containing shared configuration and plugin management for zodac.net projects</description>
     <url>https://github.com/zodac-net/parent-pom</url>
-
-    <developers>
-        <developer>
-            <id>zodac</id>
-            <name>zodac</name>
-            <email>arouge110@msn.com</email>
-        </developer>
-    </developers>
 
     <licenses>
         <license>
@@ -27,6 +19,14 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <developers>
+        <developer>
+            <id>zodac</id>
+            <name>zodac</name>
+            <email>arouge110@msn.com</email>
+        </developer>
+    </developers>
 
     <scm>
         <connection>scm:git:git://github.com/zodac-net/parent-pom.git</connection>

@@ -39,7 +39,7 @@ echo "${next_version}" >VERSION
 mvn versions:set -DnewVersion="${next_version}-SNAPSHOT" -DgenerateBackupPoms=false -DprocessAllModules
 
 # Push changes
-git add -- VERSION pom.xml ./*/pom.xml
+git add -- VERSION pom.xml
 
 if git diff --cached --quiet; then
 	echo "No changes to commit"

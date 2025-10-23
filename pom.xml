@@ -6,7 +6,7 @@
 
     <groupId>net.zodac</groupId>
     <artifactId>parent-pom</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
     <description>Parent POM containing shared configuration and plugin management for zodac.net projects</description>
     <name>[${project.artifactId}] Project</name>
     <packaging>pom</packaging>

@@ -43,7 +43,8 @@
                     "markdownlint.configFile": "code-quality-config/markdown/.markdownlint.json"
                 },
                 "[shellscript]": {
-                    "editor.defaultFormatter": "mkhl.shfmt",
+                    "bashBeautify.tabSize": 4,
+                    "editor.defaultFormatter": "shakram02.bash-beautify",
                     "editor.formatOnSave": true
                 },
                 "[xml]": {
@@ -74,10 +75,10 @@
                 "davidanson.vscode-markdownlint",
                 "esbenp.prettier-vscode",
                 "github.vscode-github-actions",
-                "mkhl.shfmt",
                 "ms-azuretools.vscode-docker",
                 "redhat.vscode-yaml",
                 "redhat.vscode-xml",
+                "shakram02.bash-beautify",
                 "tamasfe.even-better-toml",
                 "timonwong.shellcheck",
                 "vscjava.vscode-java-pack"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.zodac</groupId>
@@ -139,6 +139,7 @@
         <!-- Linter Properties -->
         <ci-config-directory>${project.basedir}/code-quality-config/java</ci-config-directory>
         <checkstyle-file>${ci-config-directory}/checkstyle.xml</checkstyle-file>
+        <checkstyle-project-suppression-file>${ci-config-directory}/checkstyle-suppression-project.xml</checkstyle-project-suppression-file>
         <license-file>${project.basedir}/code-quality-config/licenses/bsd0.txt</license-file>
         <license-header-definition-file>${ci-config-directory}/license-header-definition.txt</license-header-definition-file>
         <pitest-test-strength-threshold>100</pitest-test-strength-threshold>
@@ -468,7 +469,9 @@
                     <configuration>
                         <configLocation>${checkstyle-file}</configLocation>
                         <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                        <propertyExpansion>checkstyle.config.path=${ci-config-directory}</propertyExpansion>
+                        <!-- Properties-file syntax (one key=value per line) -->
+                        <propertyExpansion>checkstyle.config.path=${ci-config-directory}
+                            checkstyle.project.suppression.file=${checkstyle-project-suppression-file}</propertyExpansion>
                         <skip>${skip-linters}</skip>
                         <violationSeverity>info</violationSeverity>
                     </configuration>

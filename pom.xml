@@ -490,6 +490,25 @@
                             </goals>
                             <phase>validate</phase>
                         </execution>
+                        <!-- Add a 2nd execution to specifically lint the pom.xml file -->
+                        <execution>
+                            <id>pom</id>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <phase>prepare-package</phase>
+                            <configuration>
+                                <excludes>target/**</excludes>
+                                <includeResources>false</includeResources>
+                                <includeTestResources>false</includeTestResources>
+                                <includeTestSourceDirectory>false</includeTestSourceDirectory>
+                                <includes>pom.xml</includes>
+                                <outputFile>${project.build.directory}/checkstyle-result-pom.xml</outputFile>
+                                <sourceDirectories>
+                                    <sourceDirectory>${project.basedir}</sourceDirectory>
+                                </sourceDirectories>
+                            </configuration>
+                        </execution>
                     </executions>
                 </plugin>
                 <plugin>
